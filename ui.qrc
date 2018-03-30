@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/qml">
+        <file alias="main.qml">src/main.qml</file>
+    </qresource>
+    <qresource prefix="/component/material">
+        <file alias="MaterialFont.qml">src/component/material/MaterialFont.qml</file>
+        <file alias="qmldir">src/component/material/qmldir</file>
+    </qresource>
+    <qresource prefix="/font">
+        <file alias="material">font/MaterialIcons-Regular.ttf</file>
+    </qresource>
+    <qresource prefix="/js"/>
+    <qresource prefix="/component/interface">
+        <file alias="EntrancePage.qml">src/component/interface/EntrancePage.qml</file>
+        <file alias="qmldir">src/component/interface/qmldir</file>
+        <file alias="MainPage.qml">src/component/interface/MainPage.qml</file>
+        <file alias="ChatMessageItem.qml">src/component/interface/ChatMessageItem.qml</file>
+        <file alias="ChatMessageList.qml">src/component/interface/ChatMessageList.qml</file>
+    </qresource>
+</RCC>
