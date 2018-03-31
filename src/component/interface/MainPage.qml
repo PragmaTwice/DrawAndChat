@@ -52,7 +52,7 @@ Row {
                     ToolButton {
                         id: undoButton
 
-                        enabled: true
+                        enabled: false
 
                         text: materialFont.icons.undo
                         font: materialFont.name
@@ -64,7 +64,7 @@ Row {
                     ToolButton {
                         id: redoButton
 
-                        enabled: true
+                        enabled: false
 
                         text: materialFont.icons.redo
                         font: materialFont.name
@@ -143,6 +143,11 @@ Row {
 
                     height: 500
                     width: 500
+
+                    onItemBackChanged: {
+                        undoButton.enabled = undoable()
+                        redoButton.enabled = redoable()
+                    }
 
                 }
 

@@ -151,6 +151,8 @@ void DrawBoard::mousePressEvent(QMouseEvent *event)
 
             break;
         }
+        itemBackChanged();
+
         break;
 
     case Qt::RightButton:
