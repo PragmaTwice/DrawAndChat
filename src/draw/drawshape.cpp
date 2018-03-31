@@ -2,18 +2,24 @@
 
 
 DrawShape::DrawShape(DrawBoard *parent) :
-    QObject((QObject*)parent)
+    QObject((QObject*)parent),
+    _painting(true)
 {
 }
 
-QBrush DrawShape::paintBrush()
+QBrush DrawShape::paintBrush() const
 {
     return _paintBrush;
 }
 
-QPen DrawShape::paintPen()
+QPen DrawShape::paintPen() const
 {
     return _paintPen;
+}
+
+bool DrawShape::painting() const
+{
+    return _painting;
 }
 
 void DrawShape::setPaintBrush(const QBrush &inPaintBrush)
@@ -28,6 +34,12 @@ void DrawShape::setPaintPen(const QPen &inPaintPen)
     paintPenChanged();
 }
 
+void DrawShape::setPainting(bool inPainting)
+{
+    _painting = inPainting;
+    paintingChanged();
+}
+
 DrawShape::~DrawShape()
 {
 
@@ -35,6 +47,18 @@ DrawShape::~DrawShape()
 
 void DrawShape::paint(QPainter *painter)
 {
+    if(_painting)
+    {
+        painter->setPen(Qt::DotLine);
+        painter->drawRect(bound());
+    }
+
     painter->setBrush(_paintBrush);
     painter->setPen(_paintPen);
+
+}
+
+QRectF DrawShape::bound() const
+{
+    return {};
 }

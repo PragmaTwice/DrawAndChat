@@ -43,3 +43,37 @@ void LinesShape::paint(QPainter *painter)
 
     painter->drawPolyline(_points.data(), _points.size());
 }
+
+QRectF LinesShape::bound() const
+{
+    if(!_points.empty())
+    {
+        auto i = _points.cbegin();
+
+        QPointF min(*i), max(*i);
+
+        for(++i; i != _points.cend(); ++i)
+        {
+            if(i->x() < min.x())
+            {
+                min.setX(i->x());
+            }
+            else if(max.x() < i->x())
+            {
+                max.setX(i->x());
+            }
+            if(i->y() < min.y())
+            {
+                min.setY(i->y());
+            }
+            else if(max.y() < i->y())
+            {
+                max.setY(i->y());
+            }
+        }
+
+        return QRectF(min,max);
+    }
+
+    return QRectF(0,0,0,0);
+}

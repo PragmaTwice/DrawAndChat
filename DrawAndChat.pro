@@ -16,7 +16,8 @@ SOURCES += src/main.cpp \
     src/draw/drawboard.cpp \
     src/draw/drawshape.cpp \
     src/draw/penshape.cpp \
-    src/draw/linesshape.cpp
+    src/draw/linesshape.cpp \
+    src/draw/textshape.cpp
 
 RESOURCES += \
     ui.qrc
@@ -36,4 +37,5 @@ HEADERS += \
     src/draw/drawboard.h \
     src/draw/drawshape.h \
     src/draw/penshape.h \
-    src/draw/linesshape.h
+    src/draw/linesshape.h \
+    src/draw/textshape.h

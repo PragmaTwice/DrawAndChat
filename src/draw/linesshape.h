@@ -21,6 +21,7 @@ public:
     void setBackPoint(QPointF point);
 
     void paint(QPainter *painter);
+    QRectF bound() const;
 
 private:
     QVector<QPointF> _points;

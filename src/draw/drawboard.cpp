@@ -1,6 +1,7 @@
 #include <QDebug>
 
 #include "drawboard.h"
+#include "drawshape.h"
 #include "penshape.h"
 #include "linesshape.h"
 
@@ -118,6 +119,7 @@ void DrawBoard::mousePressEvent(QMouseEvent *event)
         {
         case Lines:
             ((LinesShape*)_paintItems.back())->popPoint();
+            _paintItems.back()->setPainting(false);
             _inHoverState = false;
             update();
 
@@ -144,6 +146,14 @@ void DrawBoard::mouseMoveEvent(QMouseEvent *event)
 
 void DrawBoard::mouseReleaseEvent(QMouseEvent *event)
 {
+    switch(_paintState)
+    {
+    case Pen:
+        _paintItems.back()->setPainting(false);
+        update();
+
+    default:;
+    }
 }
 
 void DrawBoard::hoverEnterEvent(QHoverEvent *event)

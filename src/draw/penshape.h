@@ -21,6 +21,7 @@ public:
     void popPoint();
 
     void paint(QPainter *painter);
+    QRectF bound() const;
 
 
 private:
