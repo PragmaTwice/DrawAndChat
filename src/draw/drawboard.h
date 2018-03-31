@@ -41,6 +41,11 @@ public:
     Q_INVOKABLE void drawLines(QVariantList points);
     Q_INVOKABLE void drawText(QRectF rect, QString text);
 
+    Q_INVOKABLE void undo();
+    Q_INVOKABLE void redo();
+    Q_INVOKABLE bool undoable();
+    Q_INVOKABLE bool redoable();
+
     qint32 paintState() const;
     qreal paintSize() const;
     qreal textSize() const;
@@ -61,14 +66,14 @@ private:
     QColor _paintColor;
 
     QVector<DrawShape*> _paintItems;
-
-    bool _inHoverState;
+    int _itemBackCount;
 
 signals:
     void paintStateChanged();
     void paintSizeChanged();
     void textSizeChanged();
     void paintColorChanged();
+    void itemBackChanged();
 
 public slots:
 

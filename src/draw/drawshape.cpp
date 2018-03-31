@@ -1,8 +1,9 @@
 #include "drawshape.h"
+#include "drawboard.h"
 
 
 DrawShape::DrawShape(DrawBoard *parent) :
-    QObject((QObject*)parent),
+    QObject(parent),
     _painting(true)
 {
 }

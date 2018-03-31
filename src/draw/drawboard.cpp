@@ -12,7 +12,7 @@ DrawBoard::DrawBoard(QQuickItem *parent) :
     _paintSize(2),
     _textSize(12),
     _paintColor(Qt::black),
-    _inHoverState(false)
+    _itemBackCount(0)
 {
     setAcceptHoverEvents(true);
     setAcceptedMouseButtons(Qt::AllButtons);
@@ -27,9 +27,9 @@ void DrawBoard::paint(QPainter *painter)
 
     painter->drawRect(QRectF(QPointF(0,0),size()));
 
-    foreach(DrawShape* item, _paintItems)
+    for(int index = 0; index < _paintItems.size() - _itemBackCount; ++index)
     {
-        item->paint(painter);
+        _paintItems[index]->paint(painter);
     }
 }
 
@@ -69,6 +69,38 @@ void DrawBoard::drawText(QRectF rect, QString text)
 {
 }
 
+void DrawBoard::undo()
+{
+    if(undoable())
+    {
+        _itemBackCount++;
+        itemBackChanged();
+
+        update();
+    }
+}
+
+void DrawBoard::redo()
+{
+    if(redoable())
+    {
+        _itemBackCount--;
+        itemBackChanged();
+
+        update();
+    }
+}
+
+bool DrawBoard::undoable()
+{
+    return _paintItems.size() - _itemBackCount > 0;
+}
+
+bool DrawBoard::redoable()
+{
+    return _itemBackCount > 0;
+}
+
 qint32 DrawBoard::paintState() const
 {
     return _paintState;
@@ -94,6 +126,14 @@ void DrawBoard::mousePressEvent(QMouseEvent *event)
     switch(event->button())
     {
     case Qt::LeftButton:
+        if(_paintState != None && _itemBackCount != 0)
+        {
+            _paintItems.resize(_paintItems.size() - _itemBackCount);
+
+            _itemBackCount = 0;
+            itemBackChanged();
+        }
+
         switch(_paintState)
         {
         case Pen:
@@ -102,11 +142,10 @@ void DrawBoard::mousePressEvent(QMouseEvent *event)
 
             break;
         case Lines:
-            if(!_inHoverState)
+            if(_paintItems.empty() || !_paintItems.back()->painting())
             {
                 _paintItems.push_back(new LinesShape(this));
                 ((LinesShape*)_paintItems.back())->pushPoint(event->pos());
-                _inHoverState = true;
             }
             ((LinesShape*)_paintItems.back())->pushPoint(event->pos());
 
@@ -120,7 +159,6 @@ void DrawBoard::mousePressEvent(QMouseEvent *event)
         case Lines:
             ((LinesShape*)_paintItems.back())->popPoint();
             _paintItems.back()->setPainting(false);
-            _inHoverState = false;
             update();
 
             break;
@@ -162,7 +200,7 @@ void DrawBoard::hoverEnterEvent(QHoverEvent *event)
 
 void DrawBoard::hoverMoveEvent(QHoverEvent *event)
 {
-    if(_inHoverState)
+    if(!_paintItems.empty() && _paintItems.back()->painting())
     {
         ((LinesShape*)_paintItems.back())->setBackPoint(event->pos());
         update();

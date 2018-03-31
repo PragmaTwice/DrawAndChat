@@ -52,20 +52,24 @@ Row {
                     ToolButton {
                         id: undoButton
 
-                        enabled: false
+                        enabled: true
 
                         text: materialFont.icons.undo
                         font: materialFont.name
+
+                        onClicked: drawBoard.undo()
 
                     }
 
                     ToolButton {
                         id: redoButton
 
-                        enabled: false
+                        enabled: true
 
                         text: materialFont.icons.redo
                         font: materialFont.name
+
+                        onClicked: drawBoard.redo()
                     }
 
                     ToolSeparator {}
