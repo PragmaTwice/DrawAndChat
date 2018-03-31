@@ -19,6 +19,8 @@ FontLoader {
         property string palette:            '\uE40A'
         property string create:             '\uE150'
         property string send:               '\uE163'
+        property string lineWeight:         '\uE91A'
+        property string textFormat:         '\uE165'
 
     }
 

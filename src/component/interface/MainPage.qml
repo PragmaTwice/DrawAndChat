@@ -99,6 +99,9 @@ Row {
 
                         text: materialFont.icons.textFields
                         font: materialFont.name
+
+                        onClicked: drawBoard.paintState = (drawBoard.paintState==DrawBoard.Text)?
+                                       DrawBoard.None : DrawBoard.Text
                     }
 
                     ToolSeparator {}
@@ -120,43 +123,104 @@ Row {
             }
         }
 
-        Flickable {
-            id: drawScroll
+        Pane {
 
             width: drawToolbar.width
             height: app.height - drawToolbar.height
 
-            clip: true
+            Flickable {
+                id: drawScroll
 
-            interactive: drawBoard.paintState == DrawBoard.None
+                width: drawToolbar.width
+                height: app.height - drawToolbar.height
 
-            Pane {
-                id: drawPane
+                clip: true
 
-                Material.elevation: 3
+                interactive: drawBoard.paintState == DrawBoard.None
 
-                transformOrigin: Item.TopLeft
-                x: 10; y: 10
+                Pane {
+                    id: drawPane
 
-                DrawBoard {
-                    id: drawBoard
+                    Material.elevation: 4
 
-                    height: 500
-                    width: 500
+                    transformOrigin: Item.TopLeft
+                    x: 10; y: 10
 
-                    onItemBackChanged: {
-                        undoButton.enabled = undoable()
-                        redoButton.enabled = redoable()
+                    DrawBoard {
+                        id: drawBoard
+
+                        height: 600
+                        width: 600
+
+                        onItemBackChanged: {
+                            undoButton.enabled = undoable()
+                            redoButton.enabled = redoable()
+                        }
+
                     }
 
+                    height: drawBoard.height + 24
+                    width: drawBoard.width + 24
                 }
 
-                height: drawBoard.height + 24
-                width: drawBoard.width + 24
+                contentHeight: drawPane.height + 2*drawPane.y
+                contentWidth: drawPane.width + 2*drawPane.x
+
             }
 
-            contentHeight: drawPane.height + 2*drawPane.y
-            contentWidth: drawPane.width + 2*drawPane.x
+            RoundButton {
+                id: colorPickButton
+
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+
+                text: materialFont.icons.palette
+
+                font: materialFont.name
+
+                Material.background: Material.Indigo
+                highlighted: true
+
+                width: 53
+                height: width
+
+            }
+
+            RoundButton {
+                id: paintSizeButton
+
+                anchors.bottom: parent.bottom
+                anchors.right: colorPickButton.left
+
+                text: materialFont.icons.lineWeight
+
+                font: materialFont.name
+
+                Material.background: Material.Indigo
+                highlighted: true
+
+                width: colorPickButton.width
+                height: width
+
+            }
+
+            RoundButton {
+                id: textSizeButton
+
+                anchors.bottom: parent.bottom
+                anchors.right: paintSizeButton.left
+
+                text: materialFont.icons.textFormat
+
+                font: materialFont.name
+
+                Material.background: Material.Indigo
+                highlighted: true
+
+                width: colorPickButton.width
+                height: width
+
+            }
 
         }
 
@@ -261,15 +325,18 @@ Row {
 
                 anchors.bottomMargin: 10
 
-                text: materialFont.icons.send
-
-                font: materialFont.name
-
                 Material.background: Material.Blue
                 highlighted: true
 
                 width: app.width * 0.035 + 25
                 height: width
+
+                text: materialFont.icons.send
+
+                font {
+                    family : materialFont.name
+                    pixelSize: width * 0.3
+                }
 
                 onClicked: {
                     chatView.pushMyMessage("twice", chatInput.text)

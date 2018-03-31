@@ -4,7 +4,7 @@
 
 DrawShape::DrawShape(DrawBoard *parent) :
     QObject(parent),
-    _painting(true)
+    _painting(false)
 {
 }
 

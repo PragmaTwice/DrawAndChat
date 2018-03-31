@@ -4,12 +4,13 @@
 #include "drawshape.h"
 #include "penshape.h"
 #include "linesshape.h"
+#include "textshape.h"
 
 
 DrawBoard::DrawBoard(QQuickItem *parent) :
     QQuickPaintedItem(parent),
     _paintState(None),
-    _paintSize(2),
+    _paintSize(1),
     _textSize(12),
     _paintColor(Qt::black),
     _itemBackCount(0)
@@ -59,14 +60,30 @@ void DrawBoard::setPaintColor(QColor inPaintColor)
 
 void DrawBoard::drawPoints(QVariantList  points)
 {
+    auto shape = new PenShape(this);
+    foreach(const QVariant& arg, points)
+    {
+        shape->pushPoint(arg.toPointF());
+    }
+    _paintItems.push_back(shape);
 }
 
 void DrawBoard::drawLines(QVariantList points)
 {
+    auto shape = new LinesShape(this);
+    foreach(const QVariant& arg, points)
+    {
+        shape->pushPoint(arg.toPointF());
+    }
+    _paintItems.push_back(shape);
 }
 
 void DrawBoard::drawText(QRectF rect, QString text)
 {
+    auto shape = new TextShape(this);
+    shape->setPaintRect(rect);
+    shape->setText(text);
+    _paintItems.push_back(shape);
 }
 
 void DrawBoard::undo()
@@ -138,18 +155,29 @@ void DrawBoard::mousePressEvent(QMouseEvent *event)
         {
         case Pen:
             _paintItems.push_back(new PenShape(this));
-            ((PenShape*)_paintItems.back())->pushPoint(event->pos());
+            _paintItems.back()->setPainting(true);
+            qobject_cast<PenShape*>(_paintItems.back())->pushPoint(event->pos());
 
             break;
         case Lines:
             if(_paintItems.empty() || !_paintItems.back()->painting())
             {
                 _paintItems.push_back(new LinesShape(this));
-                ((LinesShape*)_paintItems.back())->pushPoint(event->pos());
+                _paintItems.back()->setPainting(true);
+                qobject_cast<LinesShape*>(_paintItems.back())->pushPoint(event->pos());
             }
-            ((LinesShape*)_paintItems.back())->pushPoint(event->pos());
+            qobject_cast<LinesShape*>(_paintItems.back())->pushPoint(event->pos());
 
             break;
+
+        case Text:
+            _paintItems.push_back(new TextShape(this));
+            _paintItems.back()->setPainting(true);
+            qobject_cast<TextShape*>(_paintItems.back())->setPaintRect(QRectF(event->pos(),QSize(0,0)));
+
+            break;
+
+        default:;
         }
         itemBackChanged();
 
@@ -159,7 +187,7 @@ void DrawBoard::mousePressEvent(QMouseEvent *event)
         switch(_paintState)
         {
         case Lines:
-            ((LinesShape*)_paintItems.back())->popPoint();
+            qobject_cast<LinesShape*>(_paintItems.back())->popPoint();
             _paintItems.back()->setPainting(false);
             update();
 
@@ -174,11 +202,26 @@ void DrawBoard::mousePressEvent(QMouseEvent *event)
 
 void DrawBoard::mouseMoveEvent(QMouseEvent *event)
 {
+    TextShape* back;
+    QPointF diffPos;
+    QRectF bound;
+
     switch(_paintState)
     {
     case Pen:
-        ((PenShape*)_paintItems.back())->pushPoint(event->pos());
+        qobject_cast<PenShape*>(_paintItems.back())->pushPoint(event->pos());
         update();
+
+        break;
+
+    case Text:
+        back = qobject_cast<TextShape*>(_paintItems.back());
+        diffPos = event->pos() - back->paintRect().topLeft();
+
+        back->setPaintRectSize(QSize(diffPos.x(), diffPos.y()));
+        update();
+
+        break;
 
     default:;
     }
@@ -192,6 +235,16 @@ void DrawBoard::mouseReleaseEvent(QMouseEvent *event)
         _paintItems.back()->setPainting(false);
         update();
 
+        break;
+
+    case Text:
+        qobject_cast<TextShape*>(_paintItems.back())->setText("hello world");
+        _paintItems.back()->setPainting(false);
+        update();
+
+        break;
+
+
     default:;
     }
 }
@@ -204,7 +257,7 @@ void DrawBoard::hoverMoveEvent(QHoverEvent *event)
 {
     if(!_paintItems.empty() && _paintItems.back()->painting())
     {
-        ((LinesShape*)_paintItems.back())->setBackPoint(event->pos());
+        qobject_cast<LinesShape*>(_paintItems.back())->setBackPoint(event->pos());
         update();
     }
 }

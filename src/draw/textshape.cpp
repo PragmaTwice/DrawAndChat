@@ -35,9 +35,15 @@ void TextShape::setPaintFont(const QFont &inPaintFont)
     paintFontChanged();
 }
 
-void TextShape::setPaintRect(QRectF inPaintRect)
+void TextShape::setPaintRect(const QRectF &inPaintRect)
 {
     _paintRect = inPaintRect;
+    paintRectChanged();
+}
+
+void TextShape::setPaintRectSize(QSizeF inSize)
+{
+    _paintRect.setSize(inSize);
     paintRectChanged();
 }
 
@@ -53,7 +59,7 @@ void TextShape::paint(QPainter *painter)
 
     painter->setFont(_paintFont);
 
-    painter->drawText(_paintRect, Qt::AlignLeft, _text, &_boundingRect);
+    painter->drawText(_paintRect, Qt::AlignLeft | Qt::TextWrapAnywhere, _text, &_boundingRect);
     boundingRectChanged();
 }
 

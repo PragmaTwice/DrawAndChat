@@ -22,7 +22,8 @@ public:
     const QString& text();
 
     void setPaintFont(const QFont& inPaintFont);
-    void setPaintRect(QRectF inPaintRect);
+    void setPaintRect(const QRectF& inPaintRect);
+    void setPaintRectSize(QSizeF inSize);
     void setText(const QString& inText);
 
     void paint(QPainter* painter);
