@@ -75,13 +75,21 @@ Row {
                     ToolSeparator {}
 
                     ToolButton {
+                        id: moveBoardButton
+
+                        text: materialFont.icons.panTool
+                        font: materialFont.name
+
+                        onClicked: drawBoard.paintState = DrawBoard.None
+                    }
+
+                    ToolButton {
                         id: penButton
 
                         text: materialFont.icons.create
                         font: materialFont.name
 
-                        onClicked: drawBoard.paintState = (drawBoard.paintState==DrawBoard.Pen)?
-                                       DrawBoard.None : DrawBoard.Pen
+                        onClicked: drawBoard.paintState = DrawBoard.Pen
                     }
 
                     ToolButton {
@@ -90,8 +98,7 @@ Row {
                         text: materialFont.icons.timeline
                         font: materialFont.name
 
-                        onClicked: drawBoard.paintState = (drawBoard.paintState==DrawBoard.Lines)?
-                                       DrawBoard.None : DrawBoard.Lines
+                        onClicked: drawBoard.paintState = DrawBoard.Lines
                     }
 
                     ToolButton {
@@ -100,8 +107,7 @@ Row {
                         text: materialFont.icons.textFields
                         font: materialFont.name
 
-                        onClicked: drawBoard.paintState = (drawBoard.paintState==DrawBoard.Text)?
-                                       DrawBoard.None : DrawBoard.Text
+                        onClicked: drawBoard.paintState = DrawBoard.Text
                     }
 
                     ToolSeparator {}
@@ -155,6 +161,21 @@ Row {
                         onItemBackChanged: {
                             undoButton.enabled = undoable()
                             redoButton.enabled = redoable()
+                        }
+
+                        MouseArea {
+                            id: drawArea
+
+                            anchors.fill: parent
+
+                            cursorShape: Qt.OpenHandCursor
+
+                            enabled: false
+                        }
+
+                        onPaintStateChanged: {
+                            drawArea.cursorShape = (paintState == DrawBoard.None)?
+                                        Qt.OpenHandCursor:Qt.ArrowCursor
                         }
 
                     }

@@ -204,7 +204,6 @@ void DrawBoard::mouseMoveEvent(QMouseEvent *event)
 {
     TextShape* back;
     QPointF diffPos;
-    QRectF bound;
 
     switch(_paintState)
     {

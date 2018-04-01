@@ -21,6 +21,7 @@ FontLoader {
         property string send:               '\uE163'
         property string lineWeight:         '\uE91A'
         property string textFormat:         '\uE165'
+        property string panTool:            '\uE925'
 
     }
 
