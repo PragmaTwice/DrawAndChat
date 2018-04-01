@@ -158,11 +158,6 @@ Row {
                         height: 600
                         width: 600
 
-                        onItemBackChanged: {
-                            undoButton.enabled = undoable()
-                            redoButton.enabled = redoable()
-                        }
-
                         MouseArea {
                             id: drawArea
 
@@ -173,15 +168,32 @@ Row {
                             enabled: false
                         }
 
+                        onItemBackChanged: {
+                            undoButton.enabled = undoable()
+                            redoButton.enabled = redoable()
+                        }
+
                         onPaintStateChanged: {
                             drawArea.cursorShape = (paintState == DrawBoard.None)?
-                                        Qt.OpenHandCursor:Qt.ArrowCursor
+                                        Qt.OpenHandCursor:Qt.CrossCursor
                         }
 
                     }
 
                     height: drawBoard.height + 24
                     width: drawBoard.width + 24
+                }
+
+                onMovementStarted: {
+                    if(drawArea.cursorShape == Qt.OpenHandCursor) {
+                        drawArea.cursorShape = Qt.ClosedHandCursor
+                    }
+                }
+
+                onMovementEnded: {
+                    if(drawArea.cursorShape == Qt.ClosedHandCursor) {
+                        drawArea.cursorShape = Qt.OpenHandCursor
+                    }
                 }
 
                 contentHeight: drawPane.height + 2*drawPane.y
