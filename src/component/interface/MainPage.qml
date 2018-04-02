@@ -80,7 +80,12 @@ Row {
                         text: materialFont.icons.panTool
                         font: materialFont.name
 
-                        onClicked: drawBoard.paintState = DrawBoard.None
+                        highlighted: true
+
+                        onClicked: {
+                            drawBoard.paintState = DrawBoard.None
+                            itemRow.paintToolButtonsHighlighted(this)
+                        }
                     }
 
                     ToolButton {
@@ -89,7 +94,10 @@ Row {
                         text: materialFont.icons.create
                         font: materialFont.name
 
-                        onClicked: drawBoard.paintState = DrawBoard.Pen
+                        onClicked: {
+                            drawBoard.paintState = DrawBoard.Pen
+                            itemRow.paintToolButtonsHighlighted(this)
+                        }
                     }
 
                     ToolButton {
@@ -98,7 +106,10 @@ Row {
                         text: materialFont.icons.timeline
                         font: materialFont.name
 
-                        onClicked: drawBoard.paintState = DrawBoard.Lines
+                        onClicked: {
+                            drawBoard.paintState = DrawBoard.Lines
+                            itemRow.paintToolButtonsHighlighted(this)
+                        }
                     }
 
                     ToolButton {
@@ -107,7 +118,19 @@ Row {
                         text: materialFont.icons.textFields
                         font: materialFont.name
 
-                        onClicked: drawBoard.paintState = DrawBoard.Text
+                        onClicked: {
+                            drawBoard.paintState = DrawBoard.Text
+
+                            itemRow.paintToolButtonsHighlighted(this)
+                        }
+                    }
+
+                    function paintToolButtonsHighlighted(obj){
+                        var paintToolButtons = [moveBoardButton, penButton, lineButton, textButton]
+                        for(var index in paintToolButtons) {
+                            paintToolButtons[index].highlighted = false
+                        }
+                        obj.highlighted = true
                     }
 
                     ToolSeparator {}
@@ -217,6 +240,26 @@ Row {
                 width: 53
                 height: width
 
+                onClicked: {
+                    highlighted = false
+                    colorPickPopup.open()
+                }
+
+            }
+
+            Popup {
+                id: colorPickPopup
+
+                width: 200
+                height: 300
+
+                x: colorPickButton.x + colorPickButton.width/2 - width/2
+                y: colorPickButton.y - height
+
+                focus: true
+
+                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+                onClosed: colorPickButton.highlighted = true
             }
 
             RoundButton {
@@ -235,6 +278,26 @@ Row {
                 width: colorPickButton.width
                 height: width
 
+                onClicked: {
+                    highlighted = false
+                    paintSizePopup.open()
+                }
+
+            }
+
+            Popup {
+                id: paintSizePopup
+
+                width: 200
+                height: 300
+
+                x: paintSizeButton.x + paintSizeButton.width/2 - width/2
+                y: paintSizeButton.y - height
+
+                focus: true
+
+                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+                onClosed: paintSizeButton.highlighted = true
             }
 
             RoundButton {
@@ -253,6 +316,26 @@ Row {
                 width: colorPickButton.width
                 height: width
 
+                onClicked: {
+                    highlighted = false
+                    textSizePopup.open()
+                }
+
+            }
+
+            Popup {
+                id: textSizePopup
+
+                width: 200
+                height: 300
+
+                x: textSizeButton.x + textSizeButton.width/2 - width/2
+                y: textSizeButton.y - height
+
+                focus: true
+
+                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+                onClosed: textSizeButton.highlighted = true
             }
 
         }

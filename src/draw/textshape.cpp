@@ -57,7 +57,11 @@ void TextShape::paint(QPainter *painter)
 {
     DrawShape::paint(painter);
 
-    painter->setFont(_paintFont);
+    auto font = painter->font();
+
+    font.setPixelSize(_paintFont.pixelSize());
+
+    painter->setFont(font);
 
     painter->drawText(_paintRect, Qt::AlignLeft | Qt::TextWrapAnywhere, _text, &_boundingRect);
     boundingRectChanged();
