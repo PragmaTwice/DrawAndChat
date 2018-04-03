@@ -15,6 +15,7 @@ class DrawBoard : public QQuickPaintedItem
     Q_PROPERTY(qreal paintSize READ paintSize WRITE setPaintSize NOTIFY paintSizeChanged)
     Q_PROPERTY(qreal textSize READ textSize WRITE setTextSize NOTIFY textSizeChanged)
     Q_PROPERTY(QColor paintColor READ paintColor WRITE setPaintColor NOTIFY paintColorChanged)
+    Q_PROPERTY(QString nowText READ nowText WRITE setNowText NOTIFY nowTextChanged)
 
 public:
     enum StateType
@@ -36,6 +37,7 @@ public:
     void setPaintSize(qreal inPaintSize);
     void setTextSize(qreal inTextSize);
     void setPaintColor(QColor inPaintColor);
+    void setNowText(const QString& inNowText);
 
     Q_INVOKABLE void drawPoints(QVariantList points);
     Q_INVOKABLE void drawLines(QVariantList points);
@@ -50,6 +52,7 @@ public:
     qreal paintSize() const;
     qreal textSize() const;
     QColor paintColor() const;
+    const QString& nowText() const;
 
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
@@ -64,6 +67,7 @@ private:
     qreal _paintSize;
     qreal _textSize;
     QColor _paintColor;
+    QString _nowText;
 
     QVector<DrawShape*> _paintItems;
     int _itemBackCount;
@@ -74,6 +78,7 @@ signals:
     void textSizeChanged();
     void paintColorChanged();
     void itemBackChanged();
+    void nowTextChanged();
 
 public slots:
 

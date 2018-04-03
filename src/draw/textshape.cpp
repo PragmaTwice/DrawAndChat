@@ -59,7 +59,7 @@ void TextShape::paint(QPainter *painter)
 
     auto font = painter->font();
 
-    font.setPixelSize(_paintFont.pixelSize());
+    font.setPointSize(_paintFont.pointSize());
 
     painter->setFont(font);
 

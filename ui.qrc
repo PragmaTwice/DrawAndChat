@@ -16,5 +16,6 @@
         <file alias="MainPage.qml">src/component/interface/MainPage.qml</file>
         <file alias="ChatMessageItem.qml">src/component/interface/ChatMessageItem.qml</file>
         <file alias="ChatMessageList.qml">src/component/interface/ChatMessageList.qml</file>
+        <file alias="ColorPicker.qml">src/component/interface/ColorPicker.qml</file>
     </qresource>
 </RCC>

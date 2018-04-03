@@ -2,7 +2,7 @@ import QtQuick 2.9
 import QtQuick.Layouts 1.3
 
 import QtQuick.Controls 2.3
-import QtQuick.Controls.Material 2.2
+import QtQuick.Controls.Material 2.3
 
 import component.interface 1.0
 
@@ -119,9 +119,37 @@ Row {
                         font: materialFont.name
 
                         onClicked: {
+                            textDialog.open()
+
                             drawBoard.paintState = DrawBoard.Text
 
                             itemRow.paintToolButtonsHighlighted(this)
+                        }
+
+                        Dialog {
+                            id: textDialog
+
+                            title: qsTr("input text to draw...")
+
+                            standardButtons: Dialog.Ok
+
+                            modal: true
+
+                            width: 300
+
+                            x: -100
+                            y: 100
+
+                            TextField {
+                                id: textDialogField
+
+                                anchors.fill: parent
+                                anchors.centerIn: parent
+                            }
+
+                            onClosed: {
+                                drawBoard.nowText = textDialogField.text
+                            }
                         }
                     }
 
@@ -234,33 +262,70 @@ Row {
 
                 font: materialFont.name
 
-                Material.background: Material.Indigo
+                Material.background: "black"
                 highlighted: true
 
                 width: 53
                 height: width
 
                 onClicked: {
-                    highlighted = false
-                    colorPickPopup.open()
+                    if(!colorPickPopup.opened) {
+                        if(Material.background != "#000000") {
+                            highlighted = false
+                        }
+                        else {
+                            highlighted = true
+                        }
+
+                        colorPickPopup.open()
+                    }
+                    else {
+                        colorPickPopup.close()
+                    }
+                }
+
+                Popup {
+                    id: colorPickPopup
+
+                    width: 150
+                    height: 300
+
+                    x: parent.width/2-width/2
+                    y: -height
+
+                    focus: true
+
+                    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+                    onClosed: {
+                        if(colorPickButton.Material.background != "#ffffff") {
+                            colorPickButton.highlighted = true
+                        }
+                        else {
+                            colorPickButton.highlighted = false
+                        }
+                    }
+
+                    ScrollView {
+
+                        height: parent.height
+                        anchors.fill: parent
+
+                        clip: true
+
+                        ScrollBar.vertical.interactive: false
+
+                        ColorPicker {
+                            onChangePaintColor: {
+                                drawBoard.paintColor = nowColor
+                                colorPickButton.Material.background = nowColor
+                            }
+                        }
+                    }
                 }
 
             }
 
-            Popup {
-                id: colorPickPopup
 
-                width: 200
-                height: 300
-
-                x: colorPickButton.x + colorPickButton.width/2 - width/2
-                y: colorPickButton.y - height
-
-                focus: true
-
-                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-                onClosed: colorPickButton.highlighted = true
-            }
 
             RoundButton {
                 id: paintSizeButton
@@ -279,26 +344,63 @@ Row {
                 height: width
 
                 onClicked: {
-                    highlighted = false
-                    paintSizePopup.open()
+                    if(!paintSizePopup.opened) {
+                        highlighted = false
+                        paintSizePopup.open()
+                    }
+                    else {
+                        paintSizePopup.close()
+                    }
+                }
+
+                Popup {
+                    id: paintSizePopup
+
+                    width: 80
+                    height: 300
+
+                    x: parent.width/2-width/2
+                    y: -height
+
+                    focus: true
+
+                    closePolicy: Popup.CloseOnEscap | Popup.CloseOnPressOutsideParent
+                    onClosed: paintSizeButton.highlighted = true
+
+                    ColumnLayout {
+
+                        anchors.fill: parent
+
+                        Slider {
+                            orientation: Qt.Vertical
+
+                            from: 1
+                            to: 10
+
+                            value: 1
+                            stepSize: 1
+
+                            anchors.horizontalCenter: parent.horizontalCenter
+
+                            onValueChanged: {
+                                paintSizePopupNumberLabel.text = value
+                                drawBoard.paintSize = value
+                            }
+                        }
+                        Label {
+                            id: paintSizePopupNumberLabel
+
+                            anchors.horizontalCenter: parent.horizontalCenter
+
+                            text: "1"
+                        }
+                    }
+
                 }
 
             }
 
-            Popup {
-                id: paintSizePopup
 
-                width: 200
-                height: 300
-
-                x: paintSizeButton.x + paintSizeButton.width/2 - width/2
-                y: paintSizeButton.y - height
-
-                focus: true
-
-                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-                onClosed: paintSizeButton.highlighted = true
-            }
 
             RoundButton {
                 id: textSizeButton
@@ -317,26 +419,62 @@ Row {
                 height: width
 
                 onClicked: {
-                    highlighted = false
-                    textSizePopup.open()
+                    if(!textSizePopup.opened) {
+                        highlighted = false
+                        textSizePopup.open()
+                    }
+                    else {
+                        textSizePopup.close()
+                    }
+                }
+
+                Popup {
+                    id: textSizePopup
+
+                    width: 80
+                    height: 300
+
+                    x: parent.width/2-width/2
+                    y: -height
+
+                    focus: true
+
+                    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+                    onClosed: textSizeButton.highlighted = true
+
+                    ColumnLayout {
+
+                        anchors.fill: parent
+
+                        Slider {
+                            orientation: Qt.Vertical
+
+                            from: 12
+                            to: 36
+
+                            value: 12
+                            stepSize: 1
+
+                            anchors.horizontalCenter: parent.horizontalCenter
+
+                            onValueChanged: {
+                                textSizePopupNumberLabel.text = value
+                                drawBoard.textSize = value
+                            }
+                        }
+                        Label {
+                            id: textSizePopupNumberLabel
+
+                            anchors.horizontalCenter: parent.horizontalCenter
+
+                            text: "12"
+                        }
+                    }
                 }
 
             }
 
-            Popup {
-                id: textSizePopup
 
-                width: 200
-                height: 300
-
-                x: textSizeButton.x + textSizeButton.width/2 - width/2
-                y: textSizeButton.y - height
-
-                focus: true
-
-                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-                onClosed: textSizeButton.highlighted = true
-            }
 
         }
 
@@ -414,6 +552,8 @@ Row {
 
                     height: parent.height * 0.3
                     width: chatToolbar.width - 12
+
+                    ScrollBar.vertical.interactive: false
 
                     TextArea {
                         id: chatInput

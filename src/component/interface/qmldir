@@ -4,3 +4,4 @@ EntrancePage 1.0 EntrancePage.qml
 MainPage 1.0 MainPage.qml
 ChatMessageItem 1.0 ChatMessageItem.qml
 ChatMessageList 1.0 ChatMessageList.qml
+ColorPicker 1.0 ColorPicker.qml

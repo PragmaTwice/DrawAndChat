@@ -58,6 +58,12 @@ void DrawBoard::setPaintColor(QColor inPaintColor)
     paintColorChanged();
 }
 
+void DrawBoard::setNowText(const QString &inNowText)
+{
+    _nowText = inNowText;
+    nowTextChanged();
+}
+
 void DrawBoard::drawPoints(QVariantList  points)
 {
     auto shape = new PenShape(this);
@@ -138,6 +144,11 @@ QColor DrawBoard::paintColor() const
     return _paintColor;
 }
 
+const QString &DrawBoard::nowText() const
+{
+    return _nowText;
+}
+
 void DrawBoard::mousePressEvent(QMouseEvent *event)
 {
     switch(event->button())
@@ -174,6 +185,7 @@ void DrawBoard::mousePressEvent(QMouseEvent *event)
             _paintItems.push_back(new TextShape(this));
             _paintItems.back()->setPainting(true);
             qobject_cast<TextShape*>(_paintItems.back())->setPaintRect(QRectF(event->pos(),QSize(0,0)));
+            qobject_cast<TextShape*>(_paintItems.back())->setText(_nowText);
 
             break;
 
@@ -237,7 +249,6 @@ void DrawBoard::mouseReleaseEvent(QMouseEvent *event)
         break;
 
     case Text:
-        qobject_cast<TextShape*>(_paintItems.back())->setText("hello world");
         _paintItems.back()->setPainting(false);
         update();
 
