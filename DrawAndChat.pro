@@ -1,4 +1,4 @@
-QT += quick quickcontrols2
+QT += quick quickcontrols2 websockets
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -17,7 +17,9 @@ SOURCES += src/main.cpp \
     src/draw/drawshape.cpp \
     src/draw/penshape.cpp \
     src/draw/linesshape.cpp \
-    src/draw/textshape.cpp
+    src/draw/textshape.cpp \
+    src/network/drawandchatclient.cpp \
+    src/network/networkinfo.cpp
 
 RESOURCES += \
     ui.qrc
@@ -38,4 +40,6 @@ HEADERS += \
     src/draw/drawshape.h \
     src/draw/penshape.h \
     src/draw/linesshape.h \
-    src/draw/textshape.h
+    src/draw/textshape.h \
+    src/network/drawandchatclient.h \
+    src/network/networkinfo.h
