@@ -43,3 +43,5 @@ HEADERS += \
     src/draw/textshape.h \
     src/network/drawandchatclient.h \
     src/network/networkinfo.h
+
+STATECHARTS +=

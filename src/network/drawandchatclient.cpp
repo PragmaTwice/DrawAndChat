@@ -1,8 +1,10 @@
 #include "drawandchatclient.h"
 #include "networkinfo.h"
+
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+
 #include <functional>
 
 DrawAndChatClient::DrawAndChatClient(const QUrl &inUrl, QObject *parent) :
@@ -13,6 +15,11 @@ DrawAndChatClient::DrawAndChatClient(const QUrl &inUrl, QObject *parent) :
     connect(&_webSocket, &QWebSocket::disconnected, this, &DrawAndChatClient::onDisconnected);
 
     _webSocket.open(_url);
+}
+
+DrawAndChatClient::~DrawAndChatClient()
+{
+    _webSocket.close();
 }
 
 const QUrl &DrawAndChatClient::url()
@@ -128,24 +135,30 @@ void DrawAndChatClient::onMessageReceived(const QByteArray &message)
 
 void DrawAndChatClient::userLoginRoom(const QString &inUserName, const QString &inRoomName, const QString &roomPassword)
 {
+    setUserName(inUserName);
+    setRoomName(inRoomName);
+
     QJsonDocument json = MakeClientJson("userLoginRoom",QJsonObject{
                                             {"userName", inUserName},
                                             {"roomName", inRoomName},
                                             {"roomPassword", roomPassword}
                                         });
 
-    _webSocket.sendTextMessage(json.toJson());
+    _webSocket.sendBinaryMessage(json.toJson());
 }
 
 void DrawAndChatClient::userCreateRoom(const QString &inUserName, const QString &inRoomName, const QString &roomPassword)
 {
+    setUserName(inUserName);
+    setRoomName(inRoomName);
+
     QJsonDocument json = MakeClientJson("userCreateRoom",QJsonObject{
                                             {"userName", inUserName},
                                             {"roomName", inRoomName},
                                             {"roomPassword", roomPassword}
                                         });
 
-    _webSocket.sendTextMessage(json.toJson());
+    _webSocket.sendBinaryMessage(json.toJson());
 }
 
 void DrawAndChatClient::userPushPaint(DrawBoard::StateType state, const QJsonObject &argList)
@@ -155,7 +168,7 @@ void DrawAndChatClient::userPushPaint(DrawBoard::StateType state, const QJsonObj
                                             {"paintArguments", argList}
                                         });
 
-    _webSocket.sendTextMessage(json.toJson());
+    _webSocket.sendBinaryMessage(json.toJson());
 }
 
 void DrawAndChatClient::userRemovePaint(int id)
@@ -164,7 +177,7 @@ void DrawAndChatClient::userRemovePaint(int id)
                                             {"paintId", id}
                                         });
 
-    _webSocket.sendTextMessage(json.toJson());
+    _webSocket.sendBinaryMessage(json.toJson());
 }
 
 void DrawAndChatClient::userSendMessage(const QString &message)
@@ -173,14 +186,14 @@ void DrawAndChatClient::userSendMessage(const QString &message)
                                             {"message", message}
                                         });
 
-    _webSocket.sendTextMessage(json.toJson());
+    _webSocket.sendBinaryMessage(json.toJson());
 }
 
 void DrawAndChatClient::userLogoutRoom()
 {
     QJsonDocument json = MakeClientJson("userLogoutRoom",QJsonObject{});
 
-    _webSocket.sendTextMessage(json.toJson());
+    _webSocket.sendBinaryMessage(json.toJson());
 }
 
 void DrawAndChatClient::otherLoginRoomResponse()
@@ -209,5 +222,5 @@ void DrawAndChatClient::requestErrorMessage(int errorState)
                                             {"errorState", errorState}
                                         });
 
-    _webSocket.sendTextMessage(json.toJson());
+    _webSocket.sendBinaryMessage(json.toJson());
 }

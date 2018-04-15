@@ -14,6 +14,7 @@ class DrawAndChatClient : public QObject
 
 public:
     explicit DrawAndChatClient(const QUrl &inUrl, QObject *parent = nullptr);
+    ~DrawAndChatClient();
 
     const QUrl& url();
 
