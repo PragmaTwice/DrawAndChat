@@ -3,6 +3,7 @@
 #include <QtQuickControls2>
 
 #include "draw/drawboard.h"
+#include "network/drawandchatclient.h"
 
 int main(int argc, char *argv[])
 {
@@ -15,6 +16,7 @@ int main(int argc, char *argv[])
     QQuickStyle::setStyle("Material");
 
     qmlRegisterType<DrawBoard>("component.interface", 1, 0, "DrawBoard");
+    qmlRegisterType<DrawAndChatClient>("component.network", 1, 0, "Client");
 
     QQmlApplicationEngine engine;
     engine.addImportPath("qrc:/");

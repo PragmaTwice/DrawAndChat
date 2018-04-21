@@ -8,12 +8,14 @@ class DrawAndChatClient : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(const QUrl url READ url)
+    Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
     Q_PROPERTY(QString userName READ userName WRITE setUserName NOTIFY userNameChanged)
     Q_PROPERTY(QString roomName READ roomName WRITE setRoomName NOTIFY roomNameChanged)
 
 public:
-    explicit DrawAndChatClient(const QUrl &inUrl, QObject *parent = nullptr);
+    explicit DrawAndChatClient(QObject *parent = nullptr);
+    DrawAndChatClient(const QUrl &inUrl, QObject *parent = nullptr);
+
     ~DrawAndChatClient();
 
     const QUrl& url();
@@ -21,6 +23,7 @@ public:
     const QString& userName();
     const QString& roomName();
 
+    void setUrl(const QUrl& inUrl);
     void setUserName(const QString& inUserName);
     void setRoomName(const QString& inRoomName);
 
@@ -29,7 +32,7 @@ public:
 private:
     QWebSocket _webSocket;
 
-    const QUrl _url;
+    QUrl _url;
     QString _userName;
     QString _roomName;
 
@@ -45,6 +48,7 @@ signals:
     void connected();
     void disconnected();
 
+    void urlChanged();
     void userNameChanged();
     void roomNameChanged();
 
@@ -60,8 +64,6 @@ signals:
     void otherSendMessage(const QString& inUserName, const QString& message);
     void otherLogoutRoom(const QString& inUserName);
 
-    void requestErrorMessageResponse(const QString& errorString);
-
 public slots:
     void userLoginRoom(const QString& inUserName, const QString& inRoomName, const QString& roomPassword);
     void userCreateRoom(const QString& inUserName, const QString& inRoomName, const QString& roomPassword);
@@ -74,8 +76,6 @@ public slots:
     void otherPushPaintResponse();
     void otherRemovePaintResponse();
     void otherSendMessageResponse();
-
-    void requestErrorMessage(int errorState);
 
 };
 

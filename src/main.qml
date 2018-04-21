@@ -6,6 +6,7 @@ import QtQuick.Controls.Material 2.2
 
 import component.material 1.0
 import component.interface 1.0
+import component.network 1.0
 
 ApplicationWindow {
     id: app
@@ -17,6 +18,11 @@ ApplicationWindow {
 
     Material.theme: Material.Light
     Material.accent: Material.Blue
+
+    Client {
+        url: "ws://localhost:2333"
+
+    }
 
     MaterialFont {
         id: materialFont

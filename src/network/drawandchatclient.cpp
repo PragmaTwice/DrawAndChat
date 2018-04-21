@@ -7,13 +7,17 @@
 
 #include <functional>
 
-DrawAndChatClient::DrawAndChatClient(const QUrl &inUrl, QObject *parent) :
-    QObject(parent),
-    _url(inUrl)
+DrawAndChatClient::DrawAndChatClient(QObject *parent):
+    QObject(parent)
 {
     connect(&_webSocket, &QWebSocket::connected, this, &DrawAndChatClient::onConnected);
     connect(&_webSocket, &QWebSocket::disconnected, this, &DrawAndChatClient::onDisconnected);
+}
 
+DrawAndChatClient::DrawAndChatClient(const QUrl &inUrl, QObject *parent) :
+    DrawAndChatClient(parent)
+{
+    _url = inUrl;
     _webSocket.open(_url);
 }
 
@@ -35,6 +39,14 @@ const QString &DrawAndChatClient::userName()
 const QString &DrawAndChatClient::roomName()
 {
     return _roomName;
+}
+
+void DrawAndChatClient::setUrl(const QUrl &inUrl)
+{
+    _url = inUrl;
+
+    _webSocket.open(_url);
+    urlChanged();
 }
 
 void DrawAndChatClient::setUserName(const QString &inUserName)
@@ -118,9 +130,6 @@ void DrawAndChatClient::onMessageReceived(const QByteArray &message)
                 }},
                 {"otherLogoutRoom", [this](const QJsonObject& arg){
                     otherLogoutRoom(arg["userName"].toString());
-                }},
-                {"requestErrorMessageResponse", [this](const QJsonObject& arg){
-                    requestErrorMessageResponse(arg["errorString"].toString());
                 }}
             };
 
@@ -214,13 +223,4 @@ void DrawAndChatClient::otherRemovePaintResponse()
 void DrawAndChatClient::otherSendMessageResponse()
 {
 
-}
-
-void DrawAndChatClient::requestErrorMessage(int errorState)
-{
-    QJsonDocument json = MakeClientJson("requestErrorMessage",QJsonObject{
-                                            {"errorState", errorState}
-                                        });
-
-    _webSocket.sendBinaryMessage(json.toJson());
 }
