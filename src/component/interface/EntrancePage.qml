@@ -178,9 +178,10 @@ Pane {
         id: messageDialog
 
         title: "Title"
-        standardButtons: Dialog.Ok
 
         width: 250
+
+        standardButtons: DialogButtonBox.Ok
 
         Label {
             id: messageDialogLabel

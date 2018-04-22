@@ -20,8 +20,28 @@ ApplicationWindow {
     Material.accent: Material.Blue
 
     Client {
+        id: client
         url: "ws://localhost:2333"
 
+        onUserLoginRoomResponse: {
+            if(state != 0) {
+                entrancePage.messageBox("Error", "Fuck " + state)
+                uiStack.currentIndex = 0
+                return
+            }
+
+            uiStack.currentIndex = 2
+        }
+
+        onUserCreateRoomResponse: {
+            if(state != 0) {
+                entrancePage.messageBox("Error", "Fuck " + state)
+                uiStack.currentIndex = 0
+                return
+            }
+
+            uiStack.currentIndex = 2
+        }
     }
 
     MaterialFont {
@@ -47,11 +67,23 @@ ApplicationWindow {
             anchors.centerIn: parent
 
             onCreate: {
-                parent.currentIndex = 2
+                if(!client.isConnected()) {
+                    messageBox("Error", "Cannot connect to server")
+                    return
+                }
+
+                client.userCreateRoom(name,room,password)
+                parent.currentIndex = 1
             }
 
             onEnter: {
-                parent.currentIndex = 2
+                if(!client.isConnected()) {
+                    messageBox("Error", "Cannot connect to server")
+                    return
+                }
+
+                client.userLoginRoom(name,room,password)
+                parent.currentIndex = 1
             }
 
         }

@@ -27,7 +27,7 @@ public:
     void setUserName(const QString& inUserName);
     void setRoomName(const QString& inRoomName);
 
-    bool isConnected();
+    Q_INVOKABLE bool isConnected();
 
 private:
     QWebSocket _webSocket;
