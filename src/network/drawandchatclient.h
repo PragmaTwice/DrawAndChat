@@ -52,11 +52,11 @@ signals:
     void userNameChanged();
     void roomNameChanged();
 
-    void userLoginRoomResponse(int state);
-    void userCreateRoomResponse(int state);
-    void userPushPaintResponse(int state, int id);
-    void userRemovePaintResponse(int state);
-    void userSendMessageResponse(int state);
+    void userLoginRoomResponse(int state, const QString& error);
+    void userCreateRoomResponse(int state, const QString& error);
+    void userPushPaintResponse(int state, const QString& error, int id);
+    void userRemovePaintResponse(int state, const QString& error);
+    void userSendMessageResponse(int state, const QString& error);
 
     void otherLoginRoom(const QString& inUserName);
     void otherPushPaint(int id, DrawBoard::StateType state, const QJsonObject &argList);

@@ -52,6 +52,8 @@ ScrollView {
 
     function pushMyMessage(name, content){
         pushMessage(name, content, 2)
+
+        client.userSendMessage(content)
     }
 
 }

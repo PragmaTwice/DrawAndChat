@@ -102,19 +102,19 @@ void DrawAndChatClient::onMessageReceived(const QByteArray &message)
         {
             static QMap<QString, std::function<void(const QJsonObject&)>> operationFunctions{
                 {"userLoginRoomResponse", [this](const QJsonObject& arg){
-                    userLoginRoomResponse(arg["state"].toInt());
+                    userLoginRoomResponse(arg["state"].toInt(), arg["error"].toString());
                 }},
                 {"userCreateRoomResponse", [this](const QJsonObject& arg){
-                    userCreateRoomResponse(arg["state"].toInt());
+                    userCreateRoomResponse(arg["state"].toInt(), arg["error"].toString());
                 }},
                 {"userPushPaintResponse", [this](const QJsonObject& arg){
-                    userPushPaintResponse(arg["state"].toInt(), arg["id"].toInt());
+                    userPushPaintResponse(arg["state"].toInt(), arg["error"].toString(), arg["id"].toInt());
                 }},
                 {"userRemovePaintResponse", [this](const QJsonObject& arg){
-                    userRemovePaintResponse(arg["state"].toInt());
+                    userRemovePaintResponse(arg["state"].toInt(), arg["error"].toString());
                 }},
                 {"userSendMessageResponse", [this](const QJsonObject& arg){
-                    userSendMessageResponse(arg["state"].toInt());
+                    userSendMessageResponse(arg["state"].toInt(), arg["error"].toString());
                 }},
                 {"otherLoginRoom", [this](const QJsonObject& arg){
                     otherLoginRoom(arg["userName"].toString());

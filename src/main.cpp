@@ -5,6 +5,7 @@
 #include "draw/drawboard.h"
 #include "network/drawandchatclient.h"
 
+
 int main(int argc, char *argv[])
 {
 #if defined(Q_OS_WIN)

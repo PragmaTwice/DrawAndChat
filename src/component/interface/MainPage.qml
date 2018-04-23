@@ -11,6 +11,9 @@ Row {
 
     signal backToEntrance
 
+    property string userName: "UserName"
+    property string roomName: "RoomName"
+
     Column {
         id: drawCloumn
 
@@ -511,7 +514,7 @@ Row {
                     Label {
                         id: roomNameLabel
 
-                        text: "room name"
+                        text: roomName
 
                         leftPadding: chatToolbar.width * 0.3
 
@@ -595,7 +598,7 @@ Row {
                 }
 
                 onClicked: {
-                    chatView.pushMyMessage("twice", chatInput.text)
+                    chatView.pushMyMessage(userName, chatInput.text)
 
                     chatInput.text = ''
 
@@ -604,6 +607,10 @@ Row {
             }
         }
 
+    }
+
+    function otherSendMessage(name, message) {
+        chatView.pushOthersMessage(name, message)
     }
 
 

@@ -21,26 +21,34 @@ ApplicationWindow {
 
     Client {
         id: client
-        url: "ws://localhost:2333"
+        url: "ws://localhost:2333" //"ws://drawandchat.imtwice.cn:2333"
 
         onUserLoginRoomResponse: {
             if(state != 0) {
-                entrancePage.messageBox("Error", "Fuck " + state)
+                entrancePage.messageBox("Error",  "0x00" + state.toString(16) + " : " + error)
                 uiStack.currentIndex = 0
                 return
             }
 
             uiStack.currentIndex = 2
+            mainPage.userName = userName
+            mainPage.roomName = roomName
         }
 
         onUserCreateRoomResponse: {
             if(state != 0) {
-                entrancePage.messageBox("Error", "Fuck " + state)
+                entrancePage.messageBox("Error",  "0x00" + state.toString(16) + " : " + error)
                 uiStack.currentIndex = 0
                 return
             }
 
             uiStack.currentIndex = 2
+            mainPage.userName = userName
+            mainPage.roomName = roomName
+        }
+
+        onOtherSendMessage: {
+            mainPage.otherSendMessage(inUserName, message)
         }
     }
 
@@ -103,6 +111,7 @@ ApplicationWindow {
             anchors.fill: parent
 
             onBackToEntrance: {
+                client.userLogoutRoom()
                 parent.currentIndex = 0
             }
         }
