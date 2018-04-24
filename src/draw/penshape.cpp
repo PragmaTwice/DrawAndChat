@@ -8,6 +8,43 @@ PenShape::PenShape(DrawBoard *parent) :
     setPaintPen(QPen(QBrush(parent->paintColor()),parent->paintSize()));
 }
 
+void PenShape::loadArguments(const QVariantMap &arguments)
+{
+    DrawShape::loadArguments(arguments);
+
+    _points.clear();
+
+    auto foundPoint = arguments.find("points");
+    if(foundPoint != arguments.cend())
+    {
+        for(const QVariant& point: foundPoint->toList())
+        {
+            auto pointVal = point.toList();
+            if(pointVal.size() == 2)
+            {
+                _points.push_back(QPointF(pointVal[0].toReal(), pointVal[1].toReal()));
+            }
+        }
+    }
+
+    pointsChanged();
+}
+
+QVariantMap PenShape::dumpArguments()
+{
+    QVariantMap arguments = DrawShape::dumpArguments();
+    QVariantList vpoints;
+
+    for(const QPointF& point : _points)
+    {
+        vpoints.push_back(QVariantList{ QVariant(point.x()), QVariant(point.y()) });
+    }
+
+    arguments.insert("points", vpoints);
+
+    return arguments;
+}
+
 const QVector<QPointF> &PenShape::points()
 {
     return _points;
@@ -85,4 +122,9 @@ QRectF PenShape::bound() const
     }
 
     return QRectF(0,0,0,0);
+}
+
+int PenShape::paintState() const
+{
+    return DrawBoard::Pen;
 }

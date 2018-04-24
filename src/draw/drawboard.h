@@ -5,6 +5,8 @@
 #include <QQuickPaintedItem>
 #include <QVariantList>
 
+#include "drawinfo.h"
+
 class DrawShape;
 
 class DrawBoard : public QQuickPaintedItem
@@ -39,9 +41,12 @@ public:
     void setPaintColor(QColor inPaintColor);
     void setNowText(const QString& inNowText);
 
-    Q_INVOKABLE void drawPoints(QVariantList points);
-    Q_INVOKABLE void drawLines(QVariantList points);
-    Q_INVOKABLE void drawText(QRectF rect, QString text);
+    Q_INVOKABLE void drawPoints(int key, const QString& author, const QVariantMap &arguments);
+    Q_INVOKABLE void drawLines(int key, const QString& author, const QVariantMap &arguments);
+    Q_INVOKABLE void drawText(int key, const QString& author, const QVariantMap &arguments);
+    Q_INVOKABLE void drawShape(int key, const QString& author, StateType state, const QVariantMap& arguments);
+
+    void dumpPaint(DrawShape* shape);
 
     Q_INVOKABLE void undo();
     Q_INVOKABLE void redo();
@@ -68,9 +73,12 @@ private:
     qreal _textSize;
     QColor _paintColor;
     QString _nowText;
+    bool _enableDraw;
 
-    QVector<DrawShape*> _paintItems;
-    int _itemBackCount;
+    //QVector<DrawShape*> _paintItems;
+    //int _itemBackCount;
+
+    QMap<qint32, DrawInfo> _paintItems;
 
 signals:
     void paintStateChanged();
@@ -79,8 +87,11 @@ signals:
     void paintColorChanged();
     void itemBackChanged();
     void nowTextChanged();
+    void newPaint(StateType state, const QVariantMap& argMap);
 
 public slots:
+
+    void gotKey(qint32 key);
 
 
 };

@@ -19,7 +19,8 @@ SOURCES += src/main.cpp \
     src/draw/linesshape.cpp \
     src/draw/textshape.cpp \
     src/network/drawandchatclient.cpp \
-    src/network/networkinfo.cpp
+    src/network/networkinfo.cpp \
+    src/draw/drawinfo.cpp
 
 RESOURCES += \
     ui.qrc
@@ -42,6 +43,7 @@ HEADERS += \
     src/draw/linesshape.h \
     src/draw/textshape.h \
     src/network/drawandchatclient.h \
-    src/network/networkinfo.h
+    src/network/networkinfo.h \
+    src/draw/drawinfo.h
 
 STATECHARTS +=

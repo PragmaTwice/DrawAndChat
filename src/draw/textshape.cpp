@@ -9,6 +9,45 @@ TextShape::TextShape(DrawBoard *parent) :
     setPaintPen(QPen(QBrush(parent->paintColor()),parent->paintSize()));
 }
 
+void TextShape::loadArguments(const QVariantMap &arguments)
+{
+    DrawShape::loadArguments(arguments);
+
+
+    auto foundSize = arguments.find("size");
+    if(foundSize != arguments.cend())
+    {
+        _paintFont.setPointSizeF(foundSize->toReal());
+    }
+
+    auto foundRect = arguments.find("rect");
+    auto foundText = arguments.find("text");
+
+    if(foundRect != arguments.cend() && foundText != arguments.cend())
+    {
+        auto rectVal = foundRect->toList();
+        if(rectVal.size() == 4)
+        {
+            setPaintRect(QRectF(rectVal[0].toReal(),rectVal[1].toReal(),rectVal[2].toReal(),rectVal[3].toReal()));
+        }
+
+        setText(foundText->toString());
+    }
+}
+
+QVariantMap TextShape::dumpArguments()
+{
+    QVariantMap arguments = DrawShape::dumpArguments();
+
+    arguments.insert("rect", QVariantList{ _paintRect.left(), _paintRect.top(), _paintRect.width(), _paintRect.height() });
+
+    arguments.insert("text", _text);
+
+    arguments.insert("size", _paintFont.pointSizeF());
+
+    return arguments;
+}
+
 const QFont &TextShape::paintFont()
 {
     return _paintFont;
@@ -59,7 +98,7 @@ void TextShape::paint(QPainter *painter)
 
     auto font = painter->font();
 
-    font.setPointSize(_paintFont.pointSize());
+    font.setPointSizeF(_paintFont.pointSizeF());
 
     painter->setFont(font);
 
@@ -70,6 +109,11 @@ void TextShape::paint(QPainter *painter)
 QRectF TextShape::bound() const
 {
     return _paintRect;
+}
+
+int TextShape::paintState() const
+{
+    return DrawBoard::Text;
 }
 
 

@@ -59,7 +59,7 @@ signals:
     void userSendMessageResponse(int state, const QString& error);
 
     void otherLoginRoom(const QString& inUserName);
-    void otherPushPaint(int id, DrawBoard::StateType state, const QJsonObject &argList);
+    void otherPushPaint(const QString& inUserName, int id, int state, const QVariantMap &argList);
     void otherRemovePaint(int id);
     void otherSendMessage(const QString& inUserName, const QString& message);
     void otherLogoutRoom(const QString& inUserName);
@@ -67,7 +67,7 @@ signals:
 public slots:
     void userLoginRoom(const QString& inUserName, const QString& inRoomName, const QString& roomPassword);
     void userCreateRoom(const QString& inUserName, const QString& inRoomName, const QString& roomPassword);
-    void userPushPaint(DrawBoard::StateType state, const QJsonObject &argList);
+    void userPushPaint(int state, const QVariantMap &argList);
     void userRemovePaint(int id);
     void userSendMessage(const QString& message);
     void userLogoutRoom();

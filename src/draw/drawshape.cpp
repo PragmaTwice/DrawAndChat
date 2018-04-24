@@ -8,6 +8,28 @@ DrawShape::DrawShape(DrawBoard *parent) :
 {
 }
 
+void DrawShape::loadArguments(const QVariantMap &arguments)
+{
+    auto foundColor = arguments.find("color");
+    auto foundSize = arguments.find("size");
+
+    if(foundColor != arguments.cend() && foundSize != arguments.cend())
+    {
+        setPaintBrush(QBrush(Qt::NoBrush));
+        setPaintPen(QPen(QBrush(QColor(foundColor->toString())), foundSize->toReal()));
+    }
+}
+
+QVariantMap DrawShape::dumpArguments()
+{
+    QVariantMap arguments;
+
+    arguments.insert("color", _paintPen.brush().color().name());
+    arguments.insert("size", _paintPen.widthF());
+
+    return arguments;
+}
+
 QBrush DrawShape::paintBrush() const
 {
     return _paintBrush;
@@ -62,4 +84,9 @@ void DrawShape::paint(QPainter *painter)
 QRectF DrawShape::bound() const
 {
     return {};
+}
+
+int DrawShape::paintState() const
+{
+    return DrawBoard::None;
 }

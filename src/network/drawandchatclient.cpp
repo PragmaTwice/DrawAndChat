@@ -120,7 +120,7 @@ void DrawAndChatClient::onMessageReceived(const QByteArray &message)
                     otherLoginRoom(arg["userName"].toString());
                 }},
                 {"otherPushPaint", [this](const QJsonObject& arg){
-                    otherPushPaint(arg["id"].toInt(), (DrawBoard::StateType)arg["paintState"].toInt(), arg["paintArguments"].toObject());
+                    otherPushPaint(arg["userName"].toString(), arg["id"].toInt(), (DrawBoard::StateType)arg["paintState"].toInt(), arg["paintArguments"].toObject().toVariantMap());
                 }},
                 {"otherRemovePaint", [this](const QJsonObject& arg){
                     otherRemovePaint(arg["id"].toInt());
@@ -170,11 +170,11 @@ void DrawAndChatClient::userCreateRoom(const QString &inUserName, const QString 
     _webSocket.sendBinaryMessage(json.toJson());
 }
 
-void DrawAndChatClient::userPushPaint(DrawBoard::StateType state, const QJsonObject &argList)
+void DrawAndChatClient::userPushPaint(int state, const QVariantMap &argList)
 {
     QJsonDocument json = MakeClientJson("userPushPaint",QJsonObject{
-                                            {"paintState", (int)state},
-                                            {"paintArguments", argList}
+                                            {"paintState", state},
+                                            {"paintArguments", QJsonObject::fromVariantMap(argList)}
                                         });
 
     _webSocket.sendBinaryMessage(json.toJson());

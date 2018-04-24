@@ -16,6 +16,9 @@ class TextShape : public DrawShape
 public:
     explicit TextShape(DrawBoard *parent);
 
+    void loadArguments(const QVariantMap& arguments);
+    QVariantMap dumpArguments();
+
     const QFont& paintFont();
     QRectF paintRect();
     QRectF boundingRect();
@@ -28,6 +31,8 @@ public:
 
     void paint(QPainter* painter);
     QRectF bound() const;
+
+    int paintState() const;
 
 private:
     QFont _paintFont;

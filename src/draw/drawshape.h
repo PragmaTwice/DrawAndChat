@@ -23,8 +23,13 @@ private:
 public:
     explicit DrawShape(DrawBoard* parent);
 
+    virtual void loadArguments(const QVariantMap& arguments);
+    virtual QVariantMap dumpArguments();
+
     virtual void paint(QPainter* painter);
     virtual QRectF bound() const;
+
+    virtual int paintState() const;
 
     QBrush paintBrush() const;
     QPen paintPen() const;

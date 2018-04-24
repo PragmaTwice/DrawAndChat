@@ -21,7 +21,7 @@ ApplicationWindow {
 
     Client {
         id: client
-        url: "ws://localhost:2333" //"ws://drawandchat.imtwice.cn:2333"
+        url: "ws://drawandchat.imtwice.cn:2333" //"ws://localhost:2333" | "ws://drawandchat.imtwice.cn:2333"
 
         onUserLoginRoomResponse: {
             if(state != 0) {
@@ -45,6 +45,19 @@ ApplicationWindow {
             uiStack.currentIndex = 2
             mainPage.userName = userName
             mainPage.roomName = roomName
+        }
+
+        onUserPushPaintResponse: {
+            if(state != 0) {
+                entrancePage.messageBox("Error",  "0x00" + state.toString(16) + " : " + error)
+                return
+            }
+
+            mainPage.gotKey(id)
+        }
+
+        onOtherPushPaint: {
+            mainPage.otherPushPaint(id, inUserName, state, argList)
         }
 
         onOtherSendMessage: {

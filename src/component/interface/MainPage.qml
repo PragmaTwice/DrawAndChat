@@ -232,6 +232,10 @@ Row {
                                         Qt.OpenHandCursor:Qt.CrossCursor
                         }
 
+                        onNewPaint: {
+                            client.userPushPaint(state, argMap)
+                        }
+
                     }
 
                     height: drawBoard.height + 24
@@ -613,5 +617,12 @@ Row {
         chatView.pushOthersMessage(name, message)
     }
 
+    function otherPushPaint(key, author, state, argument) {
+        drawBoard.drawShape(key, author, state, argument)
+    }
+
+    function gotKey(key) {
+        drawBoard.gotKey(key)
+    }
 
 }

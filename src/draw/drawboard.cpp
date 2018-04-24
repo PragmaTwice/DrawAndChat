@@ -13,7 +13,8 @@ DrawBoard::DrawBoard(QQuickItem *parent) :
     _paintSize(1),
     _textSize(12),
     _paintColor(Qt::black),
-    _itemBackCount(0)
+    _enableDraw(true)
+//    _itemBackCount(0)
 {
     setAcceptHoverEvents(true);
     setAcceptedMouseButtons(Qt::AllButtons);
@@ -28,9 +29,14 @@ void DrawBoard::paint(QPainter *painter)
 
     painter->drawRect(QRectF(QPointF(0,0),size()));
 
-    for(int index = 0; index < _paintItems.size() - _itemBackCount; ++index)
+//    for(int index = 0; index < _paintItems.size() - _itemBackCount; ++index)
+//    {
+//        _paintItems[index]->paint(painter);
+//    }
+
+    for(const DrawInfo& info : _paintItems)
     {
-        _paintItems[index]->paint(painter);
+        info.shape->paint(painter);
     }
 }
 
@@ -64,64 +70,102 @@ void DrawBoard::setNowText(const QString &inNowText)
     nowTextChanged();
 }
 
-void DrawBoard::drawPoints(QVariantList  points)
+void DrawBoard::drawPoints(int key, const QString& author, const QVariantMap &arguments)
 {
     auto shape = new PenShape(this);
-    foreach(const QVariant& arg, points)
-    {
-        shape->pushPoint(arg.toPointF());
-    }
-    _paintItems.push_back(shape);
+//    foreach(const QVariant& arg, points)
+//    {
+//        shape->pushPoint(arg.toPointF());
+//    }
+
+//    _paintItems.push_back(shape);
+
+    shape->loadArguments(arguments);
+    _paintItems.insert(key, DrawInfo(author, shape));
+    update();
 }
 
-void DrawBoard::drawLines(QVariantList points)
+void DrawBoard::drawLines(int key, const QString& author, const QVariantMap &arguments)
 {
     auto shape = new LinesShape(this);
-    foreach(const QVariant& arg, points)
-    {
-        shape->pushPoint(arg.toPointF());
-    }
-    _paintItems.push_back(shape);
+//    foreach(const QVariant& arg, points)
+//    {
+//        shape->pushPoint(arg.toPointF());
+//    }
+
+//    _paintItems.push_back(shape);
+
+    shape->loadArguments(arguments);
+    _paintItems.insert(key, DrawInfo(author, shape));
+    update();
 }
 
-void DrawBoard::drawText(QRectF rect, QString text)
+void DrawBoard::drawText(int key, const QString& author, const QVariantMap &arguments)
 {
     auto shape = new TextShape(this);
-    shape->setPaintRect(rect);
-    shape->setText(text);
-    _paintItems.push_back(shape);
+//    shape->setPaintRect(rect);
+//    shape->setText(text);
+
+//    _paintItems.push_back(shape);
+
+    shape->loadArguments(arguments);
+    _paintItems.insert(key, DrawInfo(author, shape));
+    update();
+}
+
+void DrawBoard::drawShape(int key, const QString &author, DrawBoard::StateType state, const QVariantMap &arguments)
+{
+    switch(state)
+    {
+    case Pen:
+        drawPoints(key, author, arguments);
+        break;
+    case Lines:
+        drawLines(key, author, arguments);
+        break;
+    case Text:
+        drawText(key, author, arguments);
+        break;
+    default:
+        break;
+    }
+}
+
+void DrawBoard::dumpPaint(DrawShape *shape)
+{
+    newPaint((StateType)shape->paintState(), shape->dumpArguments());
 }
 
 void DrawBoard::undo()
 {
-    if(undoable())
-    {
-        _itemBackCount++;
-        itemBackChanged();
+//    if(undoable())
+//    {
+//        _itemBackCount++;
+//        itemBackChanged();
 
-        update();
-    }
+//        update();
+//    }
 }
 
 void DrawBoard::redo()
 {
-    if(redoable())
-    {
-        _itemBackCount--;
-        itemBackChanged();
+//    if(redoable())
+//    {
+//        _itemBackCount--;
+//        itemBackChanged();
 
-        update();
-    }
+//        update();
+//    }
 }
 
 bool DrawBoard::undoable()
 {
-    return _paintItems.size() - _itemBackCount > 0;
+//    return _paintItems.size() - _itemBackCount > 0;
 }
 
 bool DrawBoard::redoable()
 {
-    return _itemBackCount > 0;
+//    return _itemBackCount > 0;
 }
 
 qint32 DrawBoard::paintState() const
@@ -151,41 +195,73 @@ const QString &DrawBoard::nowText() const
 
 void DrawBoard::mousePressEvent(QMouseEvent *event)
 {
+    if(_paintItems.find(std::numeric_limits<qint32>::max()) != _paintItems.cend())
+    {
+        _enableDraw = false;
+        return;
+    }
+
+    LinesShape* lineShape = nullptr;
+
     switch(event->button())
     {
     case Qt::LeftButton:
-        if(_paintState != None && _itemBackCount != 0)
-        {
-            _paintItems.resize(_paintItems.size() - _itemBackCount);
+//        if(_paintState != None && _itemBackCount != 0)
+//        {
+//            _paintItems.resize(_paintItems.size() - _itemBackCount);
 
-            _itemBackCount = 0;
-            itemBackChanged();
-        }
+//            _itemBackCount = 0;
+//            itemBackChanged();
+//        }
 
         switch(_paintState)
         {
         case Pen:
-            _paintItems.push_back(new PenShape(this));
-            _paintItems.back()->setPainting(true);
-            qobject_cast<PenShape*>(_paintItems.back())->pushPoint(event->pos());
+//            _paintItems.push_back(new PenShape(this));
+//            _paintItems.back()->setPainting(true);
+//            qobject_cast<PenShape*>(_paintItems.back())->pushPoint(event->pos());
+
+            _paintItems.insert(std::numeric_limits<qint32>::max(), DrawInfo("", new PenShape(this)));
+            (_paintItems.end()-1)->shape->setPainting(true);
+            qobject_cast<PenShape*>((_paintItems.end()-1)->shape)->pushPoint(event->pos());
 
             break;
         case Lines:
-            if(_paintItems.empty() || !_paintItems.back()->painting())
+//            if(_paintItems.empty() || !_paintItems.back()->painting())
+//            {
+//                _paintItems.push_back(new LinesShape(this));
+//                _paintItems.back()->setPainting(true);
+//                qobject_cast<LinesShape*>(_paintItems.back())->pushPoint(event->pos());
+//            }
+//            qobject_cast<LinesShape*>(_paintItems.back())->pushPoint(event->pos());
+
+            if(_paintItems.empty() || !(_paintItems.end()-1)->shape->painting())
             {
-                _paintItems.push_back(new LinesShape(this));
-                _paintItems.back()->setPainting(true);
-                qobject_cast<LinesShape*>(_paintItems.back())->pushPoint(event->pos());
+                _paintItems.insert(std::numeric_limits<qint32>::max(),DrawInfo("",new LinesShape(this)));
+
+                (_paintItems.end()-1)->shape->setPainting(true);
+                qobject_cast<LinesShape*>((_paintItems.end()-1)->shape)->pushPoint(event->pos());
             }
-            qobject_cast<LinesShape*>(_paintItems.back())->pushPoint(event->pos());
+
+            lineShape = qobject_cast<LinesShape*>((_paintItems.end()-1)->shape);
+            if(lineShape != nullptr)
+            {
+                lineShape->pushPoint(event->pos());
+            }
 
             break;
 
         case Text:
-            _paintItems.push_back(new TextShape(this));
-            _paintItems.back()->setPainting(true);
-            qobject_cast<TextShape*>(_paintItems.back())->setPaintRect(QRectF(event->pos(),QSize(0,0)));
-            qobject_cast<TextShape*>(_paintItems.back())->setText(_nowText);
+//            _paintItems.push_back(new TextShape(this));
+//            _paintItems.back()->setPainting(true);
+//            qobject_cast<TextShape*>(_paintItems.back())->setPaintRect(QRectF(event->pos(),QSize(0,0)));
+//            qobject_cast<TextShape*>(_paintItems.back())->setText(_nowText);
+
+            _paintItems.insert(std::numeric_limits<qint32>::max(),DrawInfo("", new TextShape(this)));
+            (_paintItems.end()-1)->shape->setPainting(true);
+
+            qobject_cast<TextShape*>((_paintItems.end()-1)->shape)->setPaintRect(QRectF(event->pos(),QSize(0,0)));
+            qobject_cast<TextShape*>((_paintItems.end()-1)->shape)->setText(_nowText);
 
             break;
 
@@ -199,9 +275,21 @@ void DrawBoard::mousePressEvent(QMouseEvent *event)
         switch(_paintState)
         {
         case Lines:
-            qobject_cast<LinesShape*>(_paintItems.back())->popPoint();
-            _paintItems.back()->setPainting(false);
-            update();
+//            qobject_cast<LinesShape*>(_paintItems.back())->popPoint();
+//            _paintItems.back()->setPainting(false);
+//            update();
+
+            if(!_paintItems.empty())
+            {
+                lineShape = qobject_cast<LinesShape*>((_paintItems.end()-1)->shape);
+                if(lineShape != nullptr)
+                {
+                    lineShape->popPoint();
+                    lineShape->setPainting(false);
+                    dumpPaint(lineShape);
+                    update();
+                }
+            }
 
             break;
         }
@@ -214,23 +302,42 @@ void DrawBoard::mousePressEvent(QMouseEvent *event)
 
 void DrawBoard::mouseMoveEvent(QMouseEvent *event)
 {
-    TextShape* back;
+    if(!_enableDraw || _paintItems.empty()) return;
+
+    PenShape* penShape = nullptr;
+    TextShape* textShape = nullptr;
     QPointF diffPos;
 
+    auto backShape = (_paintItems.end()-1)->shape;
     switch(_paintState)
     {
     case Pen:
-        qobject_cast<PenShape*>(_paintItems.back())->pushPoint(event->pos());
-        update();
+//        qobject_cast<PenShape*>(_paintItems.back())->pushPoint(event->pos());
+//        update();
+
+        penShape = qobject_cast<PenShape*>(backShape);
+        if(penShape != nullptr)
+        {
+            penShape->pushPoint(event->pos());
+            update();
+        }
 
         break;
 
     case Text:
-        back = qobject_cast<TextShape*>(_paintItems.back());
-        diffPos = event->pos() - back->paintRect().topLeft();
+//        back = qobject_cast<TextShape*>(_paintItems.back());
+//        diffPos = event->pos() - back->paintRect().topLeft();
 
-        back->setPaintRectSize(QSize(diffPos.x(), diffPos.y()));
-        update();
+//        back->setPaintRectSize(QSize(diffPos.x(), diffPos.y()));
+//        update();
+
+        textShape = qobject_cast<TextShape*>(backShape);
+        if(textShape != nullptr)
+        {
+            diffPos = event->pos() - textShape->paintRect().topLeft();
+            textShape->setPaintRectSize(QSize(diffPos.x(), diffPos.y()));
+            update();
+        }
 
         break;
 
@@ -240,16 +347,24 @@ void DrawBoard::mouseMoveEvent(QMouseEvent *event)
 
 void DrawBoard::mouseReleaseEvent(QMouseEvent *event)
 {
+    if(!_enableDraw || _paintItems.empty()) return;
+
+    auto backShape = (_paintItems.end()-1)->shape;
     switch(_paintState)
     {
     case Pen:
-        _paintItems.back()->setPainting(false);
+//        _paintItems.back()->setPainting(false);
+        backShape->setPainting(false);
+        dumpPaint(backShape);
+
         update();
 
         break;
 
     case Text:
-        _paintItems.back()->setPainting(false);
+//        _paintItems.back()->setPainting(false);
+        backShape->setPainting(false);
+        dumpPaint(backShape);
         update();
 
         break;
@@ -265,15 +380,43 @@ void DrawBoard::hoverEnterEvent(QHoverEvent *event)
 
 void DrawBoard::hoverMoveEvent(QHoverEvent *event)
 {
-    if(!_paintItems.empty() && _paintItems.back()->painting())
+//    if(!_paintItems.empty() && _paintItems.back()->painting())
+//    {
+//        qobject_cast<LinesShape*>(_paintItems.back())->setBackPoint(event->pos());
+
+//        update();
+//    }
+
+    if(!_paintItems.empty() && (_paintItems.end()-1)->shape->painting())
     {
-        qobject_cast<LinesShape*>(_paintItems.back())->setBackPoint(event->pos());
-        update();
+        auto linesShape = qobject_cast<LinesShape*>((_paintItems.end()-1)->shape);
+        if(linesShape != nullptr)
+        {
+            linesShape->setBackPoint(event->pos());
+            update();
+        }
     }
 }
 
 void DrawBoard::hoverLeaveEvent(QHoverEvent *event)
 {
 
+}
+
+void DrawBoard::gotKey(qint32 key)
+{
+    qDebug() << "gotKey" << key;
+    auto foundDrawing = _paintItems.find(std::numeric_limits<qint32>::max());
+    if(foundDrawing != _paintItems.cend())
+    {
+        auto shape = foundDrawing->shape;
+
+        _paintItems.erase(foundDrawing);
+        _paintItems.insert(key, DrawInfo("", shape));
+
+        _enableDraw = true;
+
+        update();
+    }
 }
 

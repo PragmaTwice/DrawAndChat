@@ -13,6 +13,9 @@ class LinesShape : public DrawShape
 public:
     explicit LinesShape(DrawBoard *parent);
 
+    void loadArguments(const QVariantMap& arguments);
+    QVariantMap dumpArguments();
+
     const QVector<QPointF>& points();
 
     void setPoints(const QVector<QPointF>& inPoints);
@@ -22,6 +25,8 @@ public:
 
     void paint(QPainter *painter);
     QRectF bound() const;
+
+    int paintState() const;
 
 private:
     QVector<QPointF> _points;
