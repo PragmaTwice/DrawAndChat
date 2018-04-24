@@ -53,6 +53,8 @@ public:
     Q_INVOKABLE bool undoable();
     Q_INVOKABLE bool redoable();
 
+    Q_INVOKABLE void clear();
+
     qint32 paintState() const;
     qreal paintSize() const;
     qreal textSize() const;

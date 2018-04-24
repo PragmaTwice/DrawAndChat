@@ -165,7 +165,13 @@ bool DrawBoard::undoable()
 
 bool DrawBoard::redoable()
 {
-//    return _itemBackCount > 0;
+    //    return _itemBackCount > 0;
+}
+
+void DrawBoard::clear()
+{
+    _paintItems.clear();
+    update();
 }
 
 qint32 DrawBoard::paintState() const

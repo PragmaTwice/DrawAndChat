@@ -53,7 +53,7 @@ ApplicationWindow {
                 return
             }
 
-            mainPage.gotKey(id)
+            mainPage.gotPaintKey(id)
         }
 
         onOtherPushPaint: {
@@ -125,6 +125,7 @@ ApplicationWindow {
 
             onBackToEntrance: {
                 client.userLogoutRoom()
+                clearBoard()
                 parent.currentIndex = 0
             }
         }

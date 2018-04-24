@@ -621,8 +621,12 @@ Row {
         drawBoard.drawShape(key, author, state, argument)
     }
 
-    function gotKey(key) {
+    function gotPaintKey(key) {
         drawBoard.gotKey(key)
+    }
+
+    function clearBoard() {
+        drawBoard.clear()
     }
 
 }
