@@ -89,11 +89,14 @@ signals:
     void paintColorChanged();
     void itemBackChanged();
     void nowTextChanged();
+
     void newPaint(StateType state, const QVariantMap& argMap);
+    void deletePaint(qint32 key);
 
 public slots:
 
     void gotKey(qint32 key);
+    void dropKey(qint32 key);
 
 
 };

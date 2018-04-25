@@ -63,6 +63,10 @@ ApplicationWindow {
         onOtherSendMessage: {
             mainPage.otherSendMessage(inUserName, message)
         }
+
+        onOtherRemovePaint: {
+            mainPage.dropPaintKey(id)
+        }
     }
 
     MaterialFont {

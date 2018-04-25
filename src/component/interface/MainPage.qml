@@ -232,6 +232,10 @@ Row {
                                         Qt.OpenHandCursor:Qt.CrossCursor
                         }
 
+                        onDeletePaint: {
+                            client.userRemovePaint(key)
+                        }
+
                         onNewPaint: {
                             client.userPushPaint(state, argMap)
                         }
@@ -623,6 +627,10 @@ Row {
 
     function gotPaintKey(key) {
         drawBoard.gotKey(key)
+    }
+
+    function dropPaintKey(key) {
+        drawBoard.dropKey(key)
     }
 
     function clearBoard() {

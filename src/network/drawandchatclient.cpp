@@ -183,7 +183,7 @@ void DrawAndChatClient::userPushPaint(int state, const QVariantMap &argList)
 void DrawAndChatClient::userRemovePaint(int id)
 {
     QJsonDocument json = MakeClientJson("userRemovePaint",QJsonObject{
-                                            {"paintId", id}
+                                            {"id", id}
                                         });
 
     _webSocket.sendBinaryMessage(json.toJson());
