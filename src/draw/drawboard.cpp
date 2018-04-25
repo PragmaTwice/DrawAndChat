@@ -133,6 +133,7 @@ void DrawBoard::drawShape(int key, const QString &author, DrawBoard::StateType s
 
 void DrawBoard::dumpPaint(DrawShape *shape)
 {
+    _enableDraw = false;
     newPaint((StateType)shape->paintState(), shape->dumpArguments());
 }
 
@@ -201,11 +202,7 @@ const QString &DrawBoard::nowText() const
 
 void DrawBoard::mousePressEvent(QMouseEvent *event)
 {
-    if(_paintItems.find(std::numeric_limits<qint32>::max()) != _paintItems.cend())
-    {
-        _enableDraw = false;
-        return;
-    }
+    if(!_enableDraw) return;
 
     LinesShape* lineShape = nullptr;
 
@@ -411,7 +408,6 @@ void DrawBoard::hoverLeaveEvent(QHoverEvent *event)
 
 void DrawBoard::gotKey(qint32 key)
 {
-    qDebug() << "gotKey" << key;
     auto foundDrawing = _paintItems.find(std::numeric_limits<qint32>::max());
     if(foundDrawing != _paintItems.cend())
     {
