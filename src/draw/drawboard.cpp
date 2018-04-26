@@ -120,24 +120,23 @@ void DrawBoard::undo()
     if(_paintItems.find(std::numeric_limits<qint32>::max()) != _paintItems.cend())
         return;
 
+    bool found = false;
     QMapIterator<qint32, DrawInfo> iter{_paintItems};
-    for(iter.toBack(), iter.previous(); iter.hasPrevious(); iter.previous())
+    for(iter.toBack(); iter.hasPrevious();)
     {
-        //qDebug() << iter.value().author;
+        iter.previous();
         if(iter.value().author == "")
         {
+            found = true;
             break;
         }
     }
 
-    if(iter.hasPrevious())
+    if(found)
     {
-        //qDebug() << "undo" << iter.key();
         deletePaint(iter.key());
         dropKey(iter.key());
     }
-
-    //known bug : first shape cannot be undone
 
 }
 
