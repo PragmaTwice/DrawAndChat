@@ -8,6 +8,7 @@
     </qresource>
     <qresource prefix="/font">
         <file alias="material">font/MaterialIcons-Regular.ttf</file>
+        <file alias="roboto">font/Roboto-Regular.ttf</file>
     </qresource>
     <qresource prefix="/js"/>
     <qresource prefix="/component/interface">

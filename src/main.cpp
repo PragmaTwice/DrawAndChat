@@ -16,6 +16,11 @@ int main(int argc, char *argv[])
 
     QQuickStyle::setStyle("Material");
 
+    QFile fontFile(":/font/roboto");
+    if(fontFile.open(QIODevice::ReadOnly))
+        QFontDatabase::addApplicationFontFromData(fontFile.readAll());
+    fontFile.close();
+
     qmlRegisterType<DrawBoard>("component.interface", 1, 0, "DrawBoard");
     qmlRegisterType<DrawAndChatClient>("component.network", 1, 0, "Client");
 

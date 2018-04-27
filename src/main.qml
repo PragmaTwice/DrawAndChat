@@ -74,6 +74,7 @@ ApplicationWindow {
 
     }
 
+
     StackLayout {
         anchors.centerIn: parent
 
