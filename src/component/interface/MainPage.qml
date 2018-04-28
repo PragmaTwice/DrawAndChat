@@ -637,4 +637,8 @@ Row {
         drawBoard.clear()
     }
 
+    function clearMessages() {
+        chatView.clearMessages()
+    }
+
 }

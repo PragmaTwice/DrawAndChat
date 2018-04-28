@@ -56,4 +56,10 @@ ScrollView {
         client.userSendMessage(content)
     }
 
+    function clearMessages() {
+        for(var index in chatMessageList.children) {
+            chatMessageList.children[index].destroy()
+        }
+    }
+
 }

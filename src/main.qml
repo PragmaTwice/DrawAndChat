@@ -131,6 +131,7 @@ ApplicationWindow {
             onBackToEntrance: {
                 client.userLogoutRoom()
                 clearBoard()
+                clearMessages()
                 parent.currentIndex = 0
             }
         }
