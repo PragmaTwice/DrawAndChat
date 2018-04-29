@@ -80,7 +80,7 @@ ApplicationWindow {
 
         onCurrentIndexChanged: {
             uiStack.anchors.fill = (currentIndex === 2)?
-                        parent : null
+                        parent : undefined
         }
 
         id: uiStack

@@ -116,6 +116,9 @@ Pane {
 
                 onClicked: {
                     roomPasswordInput.visible = passwordSwitch.checked
+                    if(!passwordSwitch.checked) {
+                        roomPasswordInput.text = ""
+                    }
                 }
             }
 
